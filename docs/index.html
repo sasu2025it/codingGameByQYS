@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>互动鼓组</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            drumBrown: '#8B4513',
+            drumLight: '#CD853F',
+            drumDark: '#5D2E09',
+          },
+          fontFamily: {
+            drum: ['Arial', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .drum-shadow {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+      }
+      .drum-head {
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+      }
+      .drum-head:active {
+        transform: scale(0.95);
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+      }
+      .drum-bounce {
+        animation: bounce 0.3s ease;
+      }
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center p-4 font-drum">
+  <header class="mb-12 text-center">
+    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-white mb-2 tracking-wider">互动鼓组</h1>
+    <p class="text-gray-300 text-lg">点击鼓面演奏不同的鼓声</p>
+  </header>
+  
+  <main class="w-full max-w-4xl flex flex-col md:flex-row items-center justify-around gap-8 md:gap-16">
+    <!-- 左侧鼓 - 沉闷声音 -->
+    <div id="drum-left" class="drum-container w-full max-w-xs flex flex-col items-center transition-all duration-300 hover:drum-bounce">
+      <div class="drum-body w-full aspect-square bg-gradient-to-br from-drumDark to-drumBrown rounded-full drum-shadow relative overflow-hidden">
+        <!-- 鼓边装饰 -->
+        <div class="absolute inset-4 border-4 border-drumLight rounded-full opacity-70"></div>
+        <!-- 鼓面 -->
+        <div id="drum-head-left" class="drum-head absolute inset-8 bg-gradient-to-tr from-drumBrown to-drumDark rounded-full flex items-center justify-center cursor-pointer">
+          <div class="w-1/3 h-1/3 bg-black/30 rounded-full"></div>
+        </div>
+        <!-- 鼓钉 -->
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-4 h-4 bg-drumLight rounded-full"></div>
+        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-4 h-4 bg-drumLight rounded-full"></div>
+        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-4 h-4 bg-drumLight rounded-full"></div>
+        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1 w-4 h-4 bg-drumLight rounded-full"></div>
+      </div>
+      <div class="mt-6 text-center">
+        <h2 class="text-xl font-semibold text-white">低音鼓</h2>
+        <p class="text-gray-400 text-sm">沉闷音色</p>
+      </div>
+    </div>
+    
+    <!-- 右侧鼓 - 尖锐声音 -->
+    <div id="drum-right" class="drum-container w-full max-w-xs flex flex-col items-center transition-all duration-300 hover:drum-bounce">
+      <div class="drum-body w-full aspect-square bg-gradient-to-br from-amber-800 to-drumLight rounded-full drum-shadow relative overflow-hidden">
+        <!-- 鼓边装饰 -->
+        <div class="absolute inset-4 border-4 border-amber-700 rounded-full opacity-70"></div>
+        <!-- 鼓面 -->
+        <div id="drum-head-right" class="drum-head absolute inset-8 bg-gradient-to-tr from-amber-700 to-amber-900 rounded-full flex items-center justify-center cursor-pointer">
+          <div class="w-1/3 h-1/3 bg-black/20 rounded-full"></div>
+        </div>
+        <!-- 鼓钉 -->
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-4 h-4 bg-amber-600 rounded-full"></div>
+        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-4 h-4 bg-amber-600 rounded-full"></div>
+        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-4 h-4 bg-amber-600 rounded-full"></div>
+        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1 w-4 h-4 bg-amber-600 rounded-full"></div>
+      </div>
+      <div class="mt-6 text-center">
+        <h2 class="text-xl font-semibold text-white">高音鼓</h2>
+        <p class="text-gray-400 text-sm">尖锐音色</p>
+      </div>
+    </div>
+  </main>
+  
+  <footer class="mt-16 text-gray-500 text-sm">
+    <p>点击鼓面演奏 | 响应式设计</p>
+  </footer>
+
+  <script>
+    // 创建音频上下文
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // 左侧鼓 - 沉闷声音 (低频)
+    function playBassDrum() {
+      // 确保音频上下文已激活
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(60, audioContext.currentTime); // 低频
+      oscillator.frequency.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.02);
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.5);
+      
+      // 添加动画效果
+      document.getElementById('drum-left').classList.add('drum-bounce');
+      setTimeout(() => {
+        document.getElementById('drum-left').classList.remove('drum-bounce');
+      }, 300);
+    }
+    
+    // 右侧鼓 - 尖锐声音 (高频)
+    function playSnareDrum() {
+      // 确保音频上下文已激活
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // 高频
+      oscillator.frequency.exponentialRampToValueAtTime(20, audioContext.currentTime + 0.2);
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.01);
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.2);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.2);
+      
+      // 添加动画效果
+      document.getElementById('drum-right').classList.add('drum-bounce');
+      setTimeout(() => {
+        document.getElementById('drum-right').classList.remove('drum-bounce');
+      }, 300);
+    }
+    
+    // 绑定点击事件
+    document.getElementById('drum-head-left').addEventListener('click', playBassDrum);
+    document.getElementById('drum-head-right').addEventListener('click', playSnareDrum);
+    
+    // 支持键盘控制 (A键和L键)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'a' || e.key === 'A') {
+        playBassDrum();
+      } else if (e.key === 'l' || e.key === 'L') {
+        playSnareDrum();
+      }
+    });
+    
+    // 初始交互激活音频上下文 (浏览器安全限制)
+    document.body.addEventListener('click', () => {
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
