@@ -1,0 +1,435 @@
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎问候页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full">
+        <!-- 头部导航 -->
+        <header class="flex justify-between items-center mb-12">
+            <h1 class="text-3xl font-bold text-white flex items-center">
+                <i class="fas fa-hand-wave mr-3"></i>欢迎问候器
+            </h1>
+            <div class="flex space-x-4">
+                <button id="themeToggle" class="bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-sm hover:bg-white/30 transition">
+                    <i class="fas fa-palette mr-2"></i>切换主题
+                </button>
+                <button id="infoBtn" class="bg-white/20 text-white px-4 py-2 rounded-lg backdrop-blur-sm hover:bg-white/30 transition">
+                    <i class="fas fa-info-circle mr-2"></i>关于
+                </button>
+            </div>
+        </header>
+
+        <!-- 主功能区域 -->
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 问候生成卡片 -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-hover fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-comment-dots text-purple-500 mr-3"></i>生成个性化问候
+                </h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">您的姓名</label>
+                        <input type="text" id="userName" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                               placeholder="请输入您的姓名">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">问候语气</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="tone-btn bg-purple-100 text-purple-700 py-2 rounded-lg transition hover:bg-purple-200 active" data-tone="friendly">
+                                友好 <i class="fas fa-smile ml-1"></i>
+                            </button>
+                            <button class="tone-btn bg-blue-100 text-blue-700 py-2 rounded-lg transition hover:bg-blue-200" data-tone="formal">
+                                正式 <i class="fas fa-handshake ml-1"></i>
+                            </button>
+                            <button class="tone-btn bg-green-100 text-green-700 py-2 rounded-lg transition hover:bg-green-200" data-tone="casual">
+                                随意 <i class="fas fa-coffee ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">时间问候</label>
+                        <div class="flex space-x-2">
+                            <button class="time-btn flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg transition hover:bg-gray-200" data-time="morning">
+                                早上 <i class="fas fa-sun ml-1"></i>
+                            </button>
+                            <button class="time-btn flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg transition hover:bg-gray-200" data-time="afternoon">
+                                下午 <i class="fas fa-cloud-sun ml-1"></i>
+                            </button>
+                            <button class="time-btn flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg transition hover:bg-gray-200" data-time="evening">
+                                晚上 <i class="fas fa-moon ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button id="generateBtn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 pulse">
+                        <i class="fas fa-magic mr-2"></i>生成问候语
+                    </button>
+                </div>
+            </div>
+
+            <!-- 问候显示卡片 -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-hover fade-in" style="animation-delay: 0.2s">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-gift text-pink-500 mr-3"></i>您的专属问候
+                </h2>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-dashed border-purple-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
+                    <div id="greetingDisplay" class="text-center">
+                        <div class="text-gray-400 mb-4">
+                            <i class="fas fa-comments text-4xl"></i>
+                        </div>
+                        <p class="text-gray-500">填写信息后点击生成按钮，这里将显示为您定制的问候语</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex space-x-3">
+                    <button id="copyBtn" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg transition hover:bg-gray-200 disabled:opacity-50" disabled>
+                        <i class="fas fa-copy mr-2"></i>复制问候语
+                    </button>
+                    <button id="shareBtn" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg transition hover:bg-gray-200 disabled:opacity-50" disabled>
+                        <i class="fas fa-share-alt mr-2"></i>分享
+                    </button>
+                </div>
+                
+                <!-- 问候历史 -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-history mr-2"></i>最近问候
+                    </h3>
+                    <div id="greetingHistory" class="space-y-2 max-h-40 overflow-y-auto">
+                        <!-- 历史记录将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="mt-12 text-center text-white/70">
+            <p>© 2025 个性化问候生成器 | 用心创造每一份问候</p>
+        </footer>
+    </div>
+
+    <!-- 信息模态框 -->
+    <div id="infoModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 transform transition-all fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">关于问候生成器</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-4">
+                这是一个现代化的问候语生成工具，可以根据您的姓名、语气偏好和时间生成个性化的问候语。
+            </p>
+            <div class="bg-gray-100 rounded-lg p-4">
+                <p class="text-sm text-gray-600">
+                    <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+                    提示：您生成的问候语会自动保存在本地，方便后续查看和使用。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 状态管理
+        let currentState = {
+            userName: '',
+            tone: 'friendly',
+            time: 'morning',
+            greetings: JSON.parse(localStorage.getItem('greetingHistory')) || []
+        };
+
+        // DOM元素
+        const elements = {
+            userName: document.getElementById('userName'),
+            generateBtn: document.getElementById('generateBtn'),
+            greetingDisplay: document.getElementById('greetingDisplay'),
+            copyBtn: document.getElementById('copyBtn'),
+            shareBtn: document.getElementById('shareBtn'),
+            greetingHistory: document.getElementById('greetingHistory'),
+            themeToggle: document.getElementById('themeToggle'),
+            infoBtn: document.getElementById('infoBtn'),
+            infoModal: document.getElementById('infoModal'),
+            closeModal: document.getElementById('closeModal'),
+            toneBtns: document.querySelectorAll('.tone-btn'),
+            timeBtns: document.querySelectorAll('.time-btn')
+        };
+
+        // 问候语模板
+        const greetingTemplates = {
+            friendly: {
+                morning: ['早上好，{name}！愿您今天充满阳光和正能量！', '嗨{name}，新的一天开始啦，祝您心情愉快！'],
+                afternoon: ['下午好{name}！希望您度过了一个美好的上午。', '嘿{name}，下午时光也要保持好心情哦！'],
+                evening: ['晚上好{name}！今天过得怎么样？', '嗨{name}，忙碌了一天，好好放松一下吧！']
+            },
+            formal: {
+                morning: ['尊敬的{name}，祝您早安。', '{name}先生/女士，新的一天愿您事业顺利。'],
+                afternoon: ['下午好{name}，愿您工作顺利。', '{name}您好，下午时光请注意休息。'],
+                evening: ['晚上好{name}，感谢您今天的辛勤付出。', '{name}您好，愿您有个宁静的夜晚。']
+            },
+            casual: {
+                morning: ['嘿{name}！起床了吗？今天也要加油！', '{name}早啊！咖啡准备好了吗？'],
+                afternoon: ['{name}！下午茶时间到～', '哟{name}，下午打算做点啥？'],
+                evening: ['{name}！晚上打算怎么嗨？', '晚上好{name}，今天有什么新鲜事分享吗？']
+            }
+        };
+
+        // 主题配置
+        const themes = [
+            { name: '紫色', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+            { name: '蓝色', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+            { name: '绿色', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },
+            { name: '橙色', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' }
+        ];
+        let currentThemeIndex = 0;
+
+        // 初始化事件监听
+        function initializeEventListeners() {
+            elements.generateBtn.addEventListener('click', generateGreeting);
+            elements.copyBtn.addEventListener('click', copyGreeting);
+            elements.shareBtn.addEventListener('click', shareGreeting);
+            elements.themeToggle.addEventListener('click', toggleTheme);
+            elements.infoBtn.addEventListener('click', showInfoModal);
+            elements.closeModal.addEventListener('click', hideInfoModal);
+            
+            elements.userName.addEventListener('input', (e) => {
+                currentState.userName = e.target.value.trim();
+            });
+
+            // 语气按钮事件
+            elements.toneBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    elements.toneBtns.forEach(b => b.classList.remove('active', 'bg-purple-500', 'text-white'));
+                    elements.toneBtns.forEach(b => {
+                        if (b.dataset.tone === 'friendly') b.classList.add('bg-purple-100', 'text-purple-700');
+                        if (b.dataset.tone === 'formal') b.classList.add('bg-blue-100', 'text-blue-700');
+                        if (b.dataset.tone === 'casual') b.classList.add('bg-green-100', 'text-green-700');
+                    });
+                    
+                    btn.classList.remove('bg-purple-100', 'bg-blue-100', 'bg-green-100', 'text-purple-700', 'text-blue-700', 'text-green-700');
+                    btn.classList.add('active', 'bg-purple-500', 'text-white');
+                    currentState.tone = btn.dataset.tone;
+                });
+            });
+
+            // 时间按钮事件
+            elements.timeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    elements.timeBtns.forEach(b => b.classList.remove('bg-gray-800', 'text-white'));
+                    elements.timeBtns.forEach(b => b.classList.add('bg-gray-100', 'text-gray-700'));
+                    
+                    btn.classList.remove('bg-gray-100', 'text-gray-700');
+                    btn.classList.add('bg-gray-800', 'text-white');
+                    currentState.time = btn.dataset.time;
+                });
+            });
+
+            // 点击模态框外部关闭
+            elements.infoModal.addEventListener('click', (e) => {
+                if (e.target === elements.infoModal) {
+                    hideInfoModal();
+                }
+            });
+        }
+
+        // 生成问候语
+        function generateGreeting() {
+            if (!currentState.userName) {
+                showNotification('请输入您的姓名', 'error');
+                return;
+            }
+
+            const templates = greetingTemplates[currentState.tone][currentState.time];
+            const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+            const greeting = randomTemplate.replace('{name}', currentState.userName);
+
+            // 显示问候语
+            displayGreeting(greeting);
+            
+            // 保存到历史记录
+            saveToHistory(greeting);
+            
+            // 启用操作按钮
+            elements.copyBtn.disabled = false;
+            elements.shareBtn.disabled = false;
+            
+            showNotification('问候语生成成功！', 'success');
+        }
+
+        // 显示问候语
+        function displayGreeting(greeting) {
+            elements.greetingDisplay.innerHTML = `
+                <div class="fade-in">
+                    <div class="text-purple-500 mb-4 pulse">
+                        <i class="fas fa-heart text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">${greeting}</h3>
+                    <p class="text-gray-500 text-sm">${getTimeBasedMessage()}</p>
+                </div>
+            `;
+        }
+
+        // 获取时间相关消息
+        function getTimeBasedMessage() {
+            const hours = new Date().getHours();
+            if (hours < 12) return '美好的一天从问候开始！';
+            if (hours < 18) return '下午时光，问候传递温暖！';
+            return '夜晚的问候，格外温馨！';
+        }
+
+        // 保存到历史记录
+        function saveToHistory(greeting) {
+            const historyItem = {
+                text: greeting,
+                timestamp: new Date().toLocaleString('zh-CN'),
+                tone: currentState.tone,
+                time: currentState.time
+            };
+            
+            currentState.greetings.unshift(historyItem);
+            if (currentState.greetings.length > 5) {
+                currentState.greetings = currentState.greetings.slice(0, 5);
+            }
+            
+            localStorage.setItem('greetingHistory', JSON.stringify(currentState.greetings));
+            renderHistory();
+        }
+
+        // 渲染历史记录
+        function renderHistory() {
+            elements.greetingHistory.innerHTML = currentState.greetings.map((item, index) => `
+                <div class="bg-gray-50 rounded-lg p-3 text-sm fade-in" style="animation-delay: ${index * 0.1}s">
+                    <div class="flex justify-between items-start">
+                        <p class="text-gray-700 flex-1">${item.text}</p>
+                        <span class="text-gray-400 text-xs ml-2 whitespace-nowrap">${item.timestamp}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 复制问候语
+        function copyGreeting() {
+            const greetingText = elements.greetingDisplay.querySelector('h3')?.textContent;
+            if (greetingText) {
+                navigator.clipboard.writeText(greetingText).then(() => {
+                    showNotification('问候语已复制到剪贴板！', 'success');
+                });
+            }
+        }
+
+        // 分享问候语
+        function shareGreeting() {
+            const greetingText = elements.greetingDisplay.querySelector('h3')?.textContent;
+            if (greetingText && navigator.share) {
+                navigator.share({
+                    title: '我的个性化问候',
+                    text: greetingText
+                });
+            } else {
+                showNotification('分享功能在当前浏览器中不可用', 'info');
+            }
+        }
+
+        // 切换主题
+        function toggleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            document.body.style.background = themes[currentThemeIndex].gradient;
+            showNotification(`已切换到${themes[currentThemeIndex].name}主题`, 'info');
+        }
+
+        // 显示信息模态框
+        function showInfoModal() {
+            elements.infoModal.classList.remove('hidden');
+            setTimeout(() => {
+                elements.infoModal.classList.add('flex');
+            }, 10);
+        }
+
+        // 隐藏信息模态框
+        function hideInfoModal() {
+            elements.infoModal.classList.add('hidden');
+            elements.infoModal.classList.remove('flex');
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-500' : 
+                         type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 fade-in z-50`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 
+                                      type === 'success' ? 'check-circle' : 'info-circle'} mr-2"></i>
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transform', 'translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // 初始化应用
+        function initializeApp() {
+            initializeEventListeners();
+            renderHistory();
+            
+            // 设置默认激活的按钮
+            document.querySelector('.tone-btn[data-tone="friendly"]').classList.add('active', 'bg-purple-500', 'text-white');
+            document.querySelector('.time-btn[data-time="morning"]').classList.add('bg-gray-800', 'text-white');
+            
+            showNotification('欢迎使用问候生成器！', 'info');
+        }
+
+        // 启动应用
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
+- 响应式布局设计，适配各种屏幕尺寸
+- 包含通知系统和模态框等交互组件，提升用户体验
