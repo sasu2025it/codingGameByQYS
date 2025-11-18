@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字艺术展览馆</title>
+    <style>
+        /* 基础样式 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: center;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        header nav ul li {
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        header nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* 英雄区域（全屏背景） */
+        .hero-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #fff;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .hero-content .btn:hover {
+            background: #ddd;
+        }
+
+        /* 底部样式 */
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 全屏背景图片 -->
+    <div class="hero-background">
+        <img src="background.jpg" alt="数字艺术展览馆背景" class="background-image">
+    </div>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="exhibition.html">展览</a></li>
+                <li><a href="artist.html">艺术家</a></li>
+                <li><a href="experience.html">互动体验</a></li>
+                <li><a href="about.html">关于我们</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>数字艺术展览馆</h1>
+                <p>探索无限的艺术世界</p>
+                <a href="exhibition.html" class="btn">进入展览</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 数字艺术展览馆</p>
+    </footer>
+</body>
+</html>
